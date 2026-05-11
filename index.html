@@ -991,11 +991,50 @@ textarea.finput{resize:vertical;min-height:76px}
         <button class="btn btn-ghost btn-sm" onclick="nav('clients')"><i class="ti ti-arrow-left"></i>Volver a clientes</button>
       </div>
       <div class="client-detail-header" id="client-detail-header"></div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-        <span style="font-family:var(--fh);font-size:15px;font-weight:700">Proyectos</span>
-        <button class="btn btn-primary btn-sm" id="btn-new-project-client" onclick="openNewProjectForClient()"><i class="ti ti-folder-plus"></i>Nuevo proyecto</button>
+      <!-- Tabs -->
+      <div style="display:flex;gap:0;border-bottom:2px solid var(--border2);margin-bottom:18px" id="client-detail-tabs">
+        <div class="ptab active" id="ctab-projects" onclick="switchClientTab('projects')"><i class="ti ti-folder"></i>Proyectos</div>
+        <div class="ptab" id="ctab-notes" onclick="switchClientTab('notes')"><i class="ti ti-notebook"></i>Notas internas<span class="ptab-badge" id="ctab-notes-badge" style="display:none">0</span></div>
       </div>
-      <div id="client-projects-list"></div>
+
+      <!-- Tab: Proyectos -->
+      <div id="ctab-body-projects">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <span style="font-family:var(--fh);font-size:15px;font-weight:700">Proyectos</span>
+          <button class="btn btn-primary btn-sm" id="btn-new-project-client" onclick="openNewProjectForClient()"><i class="ti ti-folder-plus"></i>Nuevo proyecto</button>
+        </div>
+        <div id="client-projects-list"></div>
+      </div>
+
+      <!-- Tab: Notas -->
+      <div id="ctab-body-notes" style="display:none">
+        <div class="notes-wrap">
+          <!-- LEFT: list of notes -->
+          <div class="notes-left">
+            <div class="notes-list" id="client-notes-list"></div>
+          </div>
+          <!-- RIGHT: composer panel -->
+          <div class="notes-composer-panel">
+            <div class="notes-composer-header">
+              <i class="ti ti-lock"></i>
+              <span class="notes-composer-title">Nueva nota interna</span>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px">
+              <div id="client-note-composer-av"></div>
+              <textarea class="note-composer-input" id="client-note-input"
+                placeholder="Ej: aprueba lento, prefiere WhatsApp, reunión trimestral en marzo, enviar factura antes del 5…"
+                oninput="autoResizeNote(this)" onkeydown="noteKeydown(event)"></textarea>
+            </div>
+            <div class="notes-composer-footer">
+              <button class="btn btn-primary" onclick="addClientNote()" style="width:100%;justify-content:center">
+                <i class="ti ti-lock"></i>Guardar nota privada
+              </button>
+              <div class="notes-tip"><i class="ti ti-shield-lock"></i>Solo visible para el equipo interno</div>
+              <div class="notes-tip"><i class="ti ti-keyboard"></i>Ctrl+Enter para guardar rápido</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- EQUIPO -->
@@ -1232,7 +1271,7 @@ textarea.finput{resize:vertical;min-height:76px}
 <!-- MODAL: CLIENTE -->
 <div class="overlay" id="ov-client">
   <div class="modal modal-sm">
-    <div class="modal-head"><div class="modal-title">Nuevo cliente</div><button class="modal-close" onclick="closeOv('ov-client')"><i class="ti ti-x"></i></button></div>
+    <div class="modal-head"><div class="modal-title" id="client-modal-title">Nuevo cliente</div><button class="modal-close" onclick="closeOv('ov-client')"><i class="ti ti-x"></i></button></div>
     <div class="fgroup"><label class="flabel">Nombre *</label><input class="finput" id="fc-name" placeholder="Ej: Restaurante La Pepita"></div>
     <div class="fgroup"><label class="flabel">Sector</label><input class="finput" id="fc-sector" placeholder="Ej: Hostelería, Retail..."></div>
     <div class="fgroup">
@@ -1248,7 +1287,7 @@ textarea.finput{resize:vertical;min-height:76px}
     </div>
     <div class="modal-foot">
       <button class="btn btn-ghost" onclick="closeOv('ov-client')">Cancelar</button>
-      <button class="btn btn-primary" onclick="saveClient()">Guardar cliente</button>
+      <button class="btn btn-primary" id="client-save-btn" onclick="saveClient()">Guardar cliente</button>
     </div>
   </div>
 </div>
@@ -1386,6 +1425,11 @@ function load(){
   }
   // Migrate: add projects array
   if(!S.projects)S.projects=[];
+  // Migrate clients: add semaphore + notes
+  S.clients.forEach(c=>{
+    if(!c.semaphore)c.semaphore='green';
+    if(!c.notes)c.notes=[];
+  });
   // Ensure all tasks have required fields
   S.tasks.forEach(t=>{
     if(!t.comments)t.comments=[];
@@ -1570,12 +1614,37 @@ function renderWidgetTeam(){
   }).join('');
 }
 function renderWidgetClients(){
+  // Semaphore summary counts
+  const reds=S.clients.filter(c=>(c.semaphore||'green')==='red').length;
+  const yellows=S.clients.filter(c=>(c.semaphore||'green')==='yellow').length;
+  const greens=S.clients.filter(c=>(c.semaphore||'green')==='green').length;
+
+  let semSummary='';
+  if(S.clients.length>0){
+    semSummary=`<div class="sem-summary">
+      ${reds>0?`<div class="sem-sum-item" onclick="nav('clients')" title="Ver clientes urgentes"><span class="client-semaphore sem-red" style="animation:none"></span><span class="sem-sum-count" style="color:#ef4444">${reds}</span></div>`:''}
+      ${yellows>0?`<div class="sem-sum-item" onclick="nav('clients')" title="Ver clientes con atención"><span class="client-semaphore sem-yellow"></span><span class="sem-sum-count" style="color:#f59e0b">${yellows}</span></div>`:''}
+      ${greens>0?`<div class="sem-sum-item" onclick="nav('clients')" title="Clientes en orden"><span class="client-semaphore sem-green"></span><span class="sem-sum-count" style="color:#10b981">${greens}</span></div>`:''}
+    </div>`;
+  }
+
   document.getElementById('widget-clients').innerHTML=S.clients.map(c=>{
     const total=S.tasks.filter(t=>t.client===c.id).length;
     const done=S.tasks.filter(t=>t.client===c.id&&t.status==='done').length;
     const pct=total>0?Math.round((done/total)*100):0;
-    return `<div class="mini-client"><div class="mc-top"><div style="display:flex;align-items:center;gap:6px"><div class="sdot" style="background:${c.color}"></div><span class="mc-name">${c.name}</span></div><span class="mc-count">${done}/${total}</span></div><div class="progress"><div class="progress-bar" style="width:${pct}%;background:${c.color}"></div></div></div>`;
-  }).join('');
+    const sem=c.semaphore||'green';
+    return `<div class="mini-client">
+      <div class="mc-top">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div class="client-semaphore sem-${sem}" style="width:8px;height:8px;box-shadow:none;${sem==='red'?'animation:none':''}"></div>
+          <div class="sdot" style="background:${c.color}"></div>
+          <span class="mc-name">${c.name}</span>
+        </div>
+        <span class="mc-count">${done}/${total}</span>
+      </div>
+      <div class="progress"><div class="progress-bar" style="width:${pct}%;background:${c.color}"></div></div>
+    </div>`;
+  }).join('')+semSummary;
 }
 function renderTeamGrid(){
   const el=document.getElementById('team-grid');
@@ -1605,6 +1674,19 @@ function renderTeamGrid(){
     </div>`;
   }).join('');
 }
+function clientSemaphoreClass(c){
+  const sem=c.semaphore||'green';
+  return `sem-${sem}`;
+}
+function clientSemaphoreAuto(c){
+  // Auto-calculate based on overdue tasks
+  const overdue=S.tasks.filter(t=>t.client===c.id&&dateStatus(t)==='overdue').length;
+  const soon=S.tasks.filter(t=>t.client===c.id&&(dateStatus(t)==='soon')).length;
+  if(overdue>=2||(overdue>=1&&soon>=1))return 'red';
+  if(overdue===1||soon>=2)return 'yellow';
+  return 'green';
+}
+
 function renderClientsList(){
   const el=document.getElementById('clients-list');
   if(!S.clients.length){el.innerHTML='<div class="empty-state"><i class="ti ti-building"></i><p>Sin clientes aún</p></div>';return;}
@@ -1614,15 +1696,31 @@ function renderClientsList(){
     const inp=S.tasks.filter(t=>t.client===c.id&&t.status==='inprogress').length;
     const done=S.tasks.filter(t=>t.client===c.id&&t.status==='done').length;
     const pct=total>0?Math.round((done/total)*100):0;
+    const sem=c.semaphore||'green';
+    const semLabel={green:'Todo en orden',yellow:'Atención necesaria',red:'Urgente'}[sem];
+    const notesCount=(c.notes||[]).length;
     return `<div class="client-card">
+      <div style="position:relative;flex-shrink:0">
+        <div class="client-semaphore sem-${sem}" onclick="openSemPicker(event,'${c.id}')" title="${semLabel}"></div>
+        <div class="sem-picker" id="sem-picker-${c.id}" style="display:none">
+          <span class="sem-label">Estado:</span>
+          <div class="sem-option sem-green${sem==='green'?' active':''}" onclick="setSemaphore(event,'${c.id}','green')" title="Todo en orden"></div>
+          <div class="sem-option sem-yellow${sem==='yellow'?' active':''}" onclick="setSemaphore(event,'${c.id}','yellow')" title="Atención necesaria"></div>
+          <div class="sem-option sem-red${sem==='red'?' active':''}" onclick="setSemaphore(event,'${c.id}','red')" title="Urgente"></div>
+        </div>
+      </div>
       <div class="cc-dot" style="background:${c.color}"></div>
       <div class="cc-info" onclick="openClientDetail('${c.id}')">
-        <div class="cc-name">${c.name}</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="cc-name">${c.name}</div>
+          ${notesCount>0?`<span class="cc-notes-badge"><i class="ti ti-notebook"></i>${notesCount}</span>`:''}
+        </div>
         <div class="cc-sector">${c.sector||'—'}</div>
         <div class="progress" style="max-width:140px;margin-top:6px"><div class="progress-bar" style="width:${pct}%;background:${c.color}"></div></div>
       </div>
       <div class="cc-tags"><span class="tag tag-todo">${todo} pend.</span><span class="tag tag-inprogress">${inp} proceso</span><span class="tag tag-done">${done} done</span></div>
       <span class="cc-total">${total} tareas</span>
+      <button class="btn btn-ghost btn-sm" onclick="openEditClient('${c.id}')" title="Editar cliente"><i class="ti ti-pencil"></i></button>
       <button class="btn btn-danger btn-sm" onclick="openConfirmDeleteClient('${c.id}')"><i class="ti ti-trash"></i></button>
     </div>`;
   }).join('');
@@ -2038,15 +2136,39 @@ function setCustomColor(c){
   document.getElementById('fc-color-hex').textContent=c;
 }
 function openNewClient(){
+  S.editingClientId=null;
+  document.getElementById('client-modal-title').textContent='Nuevo cliente';
+  document.getElementById('client-save-btn').textContent='Guardar cliente';
   S.selectedClientColor=COLORS[S.clients.length%COLORS.length];
   document.getElementById('fc-name').value='';document.getElementById('fc-sector').value='';
   buildSwatches(S.selectedClientColor);openOv('ov-client');
 }
+function openEditClient(id){
+  const c=gc(id);if(!c)return;
+  S.editingClientId=id;
+  document.getElementById('client-modal-title').textContent='Editar cliente';
+  document.getElementById('client-save-btn').textContent='Guardar cambios';
+  S.selectedClientColor=c.color||COLORS[0];
+  document.getElementById('fc-name').value=c.name;
+  document.getElementById('fc-sector').value=c.sector||'';
+  buildSwatches(S.selectedClientColor);
+  openOv('ov-client');
+}
 function saveClient(){
   const name=document.getElementById('fc-name').value.trim();
   if(!name){toast('El nombre es obligatorio','warn');return;}
-  S.clients.push({id:'c'+Date.now(),name,sector:document.getElementById('fc-sector').value.trim(),color:S.selectedClientColor});
-  persist();closeOv('ov-client');renderAll();toast('Cliente añadido');
+  if(S.editingClientId){
+    const c=gc(S.editingClientId);if(!c)return;
+    c.name=name;
+    c.sector=document.getElementById('fc-sector').value.trim();
+    c.color=S.selectedClientColor;
+    persist();closeOv('ov-client');renderAll();
+    if(S.viewingClientId===S.editingClientId)renderClientDetail();
+    toast('Cliente actualizado');
+  } else {
+    S.clients.push({id:'c'+Date.now(),name,sector:document.getElementById('fc-sector').value.trim(),color:S.selectedClientColor,semaphore:'green',notes:[]});
+    persist();closeOv('ov-client');renderAll();toast('Cliente añadido');
+  }
 }
 function openConfirmDeleteClient(id){
   const c=gc(id);if(!c)return;S.deleteClientId=id;
@@ -2889,7 +3011,18 @@ function renderClientDetail(){
   const total=S.tasks.filter(t=>t.client===clientId).length;
   const done=S.tasks.filter(t=>t.client===clientId&&t.status==='done').length;
   const active=S.tasks.filter(t=>t.client===clientId&&t.status!=='done').length;
+  const sem=c.semaphore||'green';
+  const semLabel={green:'Todo en orden',yellow:'Atención necesaria',red:'Urgente'}[sem];
   document.getElementById('client-detail-header').innerHTML=`
+    <div style="position:relative">
+      <div class="client-semaphore sem-${sem}" style="width:16px;height:16px" onclick="openSemPicker(event,'${clientId}')" title="${semLabel}"></div>
+      <div class="sem-picker" id="sem-picker-${clientId}" style="display:none">
+        <span class="sem-label">Estado:</span>
+        <div class="sem-option sem-green${sem==='green'?' active':''}" onclick="setSemaphore(event,'${clientId}','green')" title="Todo en orden"></div>
+        <div class="sem-option sem-yellow${sem==='yellow'?' active':''}" onclick="setSemaphore(event,'${clientId}','yellow')" title="Atención necesaria"></div>
+        <div class="sem-option sem-red${sem==='red'?' active':''}" onclick="setSemaphore(event,'${clientId}','red')" title="Urgente"></div>
+      </div>
+    </div>
     <div class="client-detail-dot" style="background:${c.color}"></div>
     <div>
       <div class="client-detail-name">${c.name}</div>
@@ -2900,7 +3033,11 @@ function renderClientDetail(){
       <div class="client-det-stat"><div class="client-det-val">${active}</div><div class="client-det-lbl">Activas</div></div>
       <div class="client-det-stat"><div class="client-det-val">${done}</div><div class="client-det-lbl">Completadas</div></div>
       <div class="client-det-stat"><div class="client-det-val">${total}</div><div class="client-det-lbl">Total</div></div>
+      <button class="btn btn-ghost btn-sm" onclick="openEditClient('${clientId}')" style="margin-left:8px" title="Editar cliente"><i class="ti ti-pencil"></i>Editar</button>
     </div>`;
+  // Reset to projects tab
+  switchClientTab('projects');
+  renderClientNotes(clientId);
 
   // Update new project button
   document.getElementById('btn-new-project-client').onclick=()=>openNewProjectForClient(clientId);
@@ -3420,6 +3557,153 @@ document.addEventListener('click',e=>{
     closeCalPopup();
   }
 });
+
+
+/* ═══ SEMÁFORO DE CLIENTE ═══ */
+
+function openSemPicker(e,clientId){
+  e.stopPropagation();
+  // Close all other pickers
+  document.querySelectorAll('.sem-picker').forEach(p=>{if(p.id!=='sem-picker-'+clientId)p.style.display='none';});
+  const picker=document.getElementById('sem-picker-'+clientId);
+  if(!picker)return;
+  picker.style.display=picker.style.display==='none'?'flex':'none';
+}
+
+function setSemaphore(e,clientId,status){
+  e.stopPropagation();
+  const c=gc(clientId);if(!c)return;
+  c.semaphore=status;
+  persist();
+  // Close picker
+  document.querySelectorAll('.sem-picker').forEach(p=>p.style.display='none');
+  renderAll();
+  if(S.viewingClientId===clientId)renderClientDetail();
+  const labels={green:'Todo en orden',yellow:'Atención necesaria',red:'Urgente'};
+  toast(`${c.name} — ${labels[status]}`);
+}
+
+// Close sem pickers on outside click
+document.addEventListener('click',()=>{
+  document.querySelectorAll('.sem-picker').forEach(p=>p.style.display='none');
+});
+
+/* ═══ NOTAS PRIVADAS ═══ */
+
+function switchClientTab(tab){
+  ['projects','notes'].forEach(t=>{
+    document.getElementById('ctab-'+t)?.classList.toggle('active',t===tab);
+    document.getElementById('ctab-body-'+t)?.style && (document.getElementById('ctab-body-'+t).style.display=t===tab?'block':'none');
+  });
+  if(tab==='notes')renderClientNotes(S.viewingClientId);
+}
+
+function renderClientNotes(clientId){
+  const c=gc(clientId);if(!c)return;
+  const notes=c.notes||[];
+  const badge=document.getElementById('ctab-notes-badge');
+  if(badge){badge.style.display=notes.length>0?'flex':'none';if(notes.length)badge.textContent=notes.length;}
+
+  const el=document.getElementById('client-notes-list');if(!el)return;
+  // Set composer avatar
+  const admin=S.members.find(m=>m.isAdmin)||S.members[0];
+  const avEl=document.getElementById('client-note-composer-av');
+  if(avEl)avEl.innerHTML=avHTML(admin,'md');
+
+  if(!notes.length){
+    el.innerHTML=`<div class="notes-empty">
+      <i class="ti ti-notebook"></i>
+      <div class="notes-empty-title">Sin notas aún</div>
+      <div class="notes-empty-sub">Usa este espacio para guardar contexto<br>interno que el equipo necesita recordar.</div>
+    </div>`;
+    return;
+  }
+
+  el.innerHTML=[...notes].reverse().map(n=>{
+    const mb=gm(n.memberId);
+    return `<div class="note-item" id="note-${n.id}">
+      <div class="note-text" id="note-text-${n.id}">${escHtml(n.text)}</div>
+      <textarea class="note-edit-area" id="note-edit-${n.id}"
+        onkeydown="noteEditKeydown(event,'${clientId}','${n.id}')"
+        onblur="saveNoteEdit('${clientId}','${n.id}',this)">${escHtml(n.text)}</textarea>
+      <div class="note-edit-actions" id="note-edit-actions-${n.id}">
+        <button class="btn btn-primary btn-sm" onclick="saveNoteEdit('${clientId}','${n.id}',document.getElementById('note-edit-${n.id}'))"><i class="ti ti-check"></i>Guardar</button>
+        <button class="btn btn-ghost btn-sm" onclick="cancelNoteEdit('${clientId}','${n.id}')">Cancelar</button>
+      </div>
+      <div class="note-meta">
+        ${mb?`<div class="note-author">${avHTML(mb,'xs')}${mb.name}</div>`:''}
+        <span class="note-date">${fmtTsFull(n.ts)}</span>
+        ${n.edited?'<span style="font-family:var(--fb);font-size:10px;color:var(--text3);font-style:italic">(editada)</span>':''}
+        <div class="note-actions">
+          <button class="note-action-btn" onclick="startNoteEdit('${clientId}','${n.id}')"><i class="ti ti-pencil"></i>Editar</button>
+          <button class="note-action-btn del" onclick="deleteNote('${clientId}','${n.id}')"><i class="ti ti-trash"></i>Borrar</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function addClientNote(){
+  const inp=document.getElementById('client-note-input');
+  const text=(inp?.value||'').trim();
+  if(!text){toast('Escribe algo antes de guardar','warn');return;}
+  const c=gc(S.viewingClientId);if(!c)return;
+  if(!c.notes)c.notes=[];
+  const admin=S.members.find(m=>m.isAdmin)||S.members[0];
+  c.notes.push({id:'n'+Date.now(),text,memberId:admin.id,ts:Date.now(),edited:false});
+  if(inp)inp.value='';
+  persist();renderClientNotes(S.viewingClientId);renderClientsList();toast('Nota guardada');
+}
+
+function noteKeydown(e){
+  if(e.ctrlKey&&e.key==='Enter'){e.preventDefault();addClientNote();}
+}
+
+function autoResizeNote(el){
+  el.style.height='auto';
+  el.style.height=Math.min(el.scrollHeight,200)+'px';
+}
+
+function startNoteEdit(clientId,noteId){
+  const textEl=document.getElementById('note-text-'+noteId);
+  const editEl=document.getElementById('note-edit-'+noteId);
+  const actEl=document.getElementById('note-edit-actions-'+noteId);
+  if(!textEl||!editEl)return;
+  textEl.style.display='none';
+  editEl.classList.add('visible');editEl.style.display='block';editEl.focus();editEl.select();
+  if(actEl){actEl.classList.add('visible');actEl.style.display='flex';}
+}
+
+function cancelNoteEdit(clientId,noteId){
+  const c=gc(clientId);if(!c)return;
+  const n=(c.notes||[]).find(x=>x.id===noteId);if(!n)return;
+  const textEl=document.getElementById('note-text-'+noteId);
+  const editEl=document.getElementById('note-edit-'+noteId);
+  const actEl=document.getElementById('note-edit-actions-'+noteId);
+  if(textEl)textEl.style.display='';
+  if(editEl){editEl.classList.remove('visible');editEl.style.display='none';editEl.value=n.text;}
+  if(actEl){actEl.classList.remove('visible');actEl.style.display='none';}
+}
+
+function saveNoteEdit(clientId,noteId,textarea){
+  const newText=textarea.value.trim();
+  if(!newText)return;
+  const c=gc(clientId);if(!c)return;
+  const n=(c.notes||[]).find(x=>x.id===noteId);if(!n)return;
+  n.text=newText;n.edited=true;
+  persist();renderClientNotes(clientId);renderClientsList();toast('Nota actualizada');
+}
+
+function noteEditKeydown(e,clientId,noteId){
+  if(e.key==='Escape'){e.preventDefault();cancelNoteEdit(clientId,noteId);}
+  if(e.ctrlKey&&e.key==='Enter'){e.preventDefault();saveNoteEdit(clientId,noteId,e.target);}
+}
+
+function deleteNote(clientId,noteId){
+  const c=gc(clientId);if(!c)return;
+  c.notes=(c.notes||[]).filter(n=>n.id!==noteId);
+  persist();renderClientNotes(clientId);renderClientsList();toast('Nota eliminada');
+}
 
 load();renderAll();
 
