@@ -674,6 +674,11 @@ textarea.finput{resize:vertical;min-height:76px}
 
 .project-task-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--radius-sm);cursor:pointer;transition:background .15s;margin-bottom:3px}
 .project-task-row:last-child{margin-bottom:0}
+.project-task-actions{display:flex;align-items:center;gap:2px;flex-shrink:0;opacity:0;transition:opacity .15s}
+.project-task-row:hover .project-task-actions{opacity:1}
+.pt-action-btn{background:none;border:none;cursor:pointer;width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--text3);transition:all .15s;padding:0}
+.pt-action-btn:hover{background:var(--px-light);color:var(--px)}
+.pt-action-btn.del:hover{background:#fee2e2;color:#dc2626}
 .project-task-row:hover{background:var(--bg3)}
 .project-task-title{font-family:var(--fb);flex:1;font-size:13px;font-weight:600;color:var(--text);min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .project-task-assignee{display:flex;align-items:center;gap:5px;font-family:var(--fb);font-size:11px;color:var(--text3);font-weight:500;flex-shrink:0}
@@ -964,6 +969,61 @@ textarea.finput{resize:vertical;min-height:76px}
 
 .member-modal-divider{height:1px;background:var(--border2);margin:16px 0}
 
+
+/* Project task row — quick actions on hover */
+.project-task-row{position:relative}
+
+
+
+/* ══ TIEMPO ESTIMADO VS REAL ══ */
+.time-tracking-row{display:flex;align-items:center;gap:10px;padding:14px 0;border-top:1px solid var(--border2)}
+.time-track-group{flex:1;display:flex;flex-direction:column;gap:5px}
+.time-track-label{font-family:var(--fh);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3)}
+.time-track-input-wrap{display:flex;align-items:center;gap:6px}
+.time-track-input{width:80px;padding:7px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:var(--fh);font-size:14px;font-weight:700;color:var(--text);text-align:center;outline:none;transition:border-color .15s}
+.time-track-input:focus{border-color:var(--px)}
+.time-track-unit{font-family:var(--fb);font-size:12px;color:var(--text3);font-weight:500}
+.time-diff{font-family:var(--fh);font-size:11px;font-weight:700;padding:3px 9px;border-radius:10px}
+.time-diff.over{background:#fee2e2;color:#dc2626}
+.time-diff.under{background:#ecfdf5;color:#065f46}
+.time-diff.exact{background:#eff6ff;color:#1e40af}
+.time-progress{height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;margin-top:4px}
+.time-progress-fill{height:100%;border-radius:3px;transition:width .4s ease}
+
+/* Time on task card */
+.tc-time{display:flex;align-items:center;gap:3px;font-family:var(--fh);font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;background:var(--bg3);color:var(--text3)}
+.tc-time.over{background:#fee2e2;color:#dc2626}
+.tc-time.under{background:#ecfdf5;color:#065f46}
+
+/* Time summary in detail grid */
+.time-summary-box{background:var(--bg3);border-radius:var(--radius-sm);padding:10px 14px;display:flex;align-items:center;gap:16px;margin-top:6px}
+.tsb-item{text-align:center}
+.tsb-val{font-family:var(--fh);font-size:16px;font-weight:800;color:var(--text)}
+.tsb-lbl{font-family:var(--fb);font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+
+/* ══ PLANTILLAS ══ */
+.templates-page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.templates-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.template-card{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);padding:18px;transition:box-shadow .15s;display:flex;flex-direction:column;gap:12px}
+.template-card:hover{box-shadow:var(--shadow)}
+.tpl-header{display:flex;align-items:flex-start;gap:10px}
+.tpl-icon{width:36px;height:36px;border-radius:var(--radius-sm);background:var(--px-light);color:var(--px);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.tpl-info{flex:1;min-width:0}
+.tpl-name{font-family:var(--fh);font-size:14px;font-weight:700;color:var(--text)}
+.tpl-desc{font-family:var(--fb);font-size:12px;color:var(--text3);font-weight:500;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tpl-meta{display:flex;gap:6px;flex-wrap:wrap}
+.tpl-actions{display:flex;gap:6px;padding-top:10px;border-top:1px solid var(--border2)}
+
+/* Save as template button in task panel */
+.save-tpl-btn{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:var(--radius-sm);background:transparent;border:1px solid var(--border);font-family:var(--fh);font-size:11px;font-weight:700;color:var(--text3);cursor:pointer;transition:all .15s}
+.save-tpl-btn:hover{background:var(--px-light);color:var(--px);border-color:var(--px)}
+
+/* Template empty state */
+.tpl-empty{text-align:center;padding:60px 20px;color:var(--text3)}
+.tpl-empty .ti{font-size:44px;display:block;margin-bottom:12px;color:var(--border)}
+.tpl-empty-title{font-family:var(--fh);font-size:15px;font-weight:700;color:var(--text2);margin-bottom:6px}
+.tpl-empty-sub{font-family:var(--fb);font-size:13px;font-weight:500;line-height:1.5}
+
 </style>
 </head>
 <body>
@@ -985,6 +1045,7 @@ textarea.finput{resize:vertical;min-height:76px}
     <div class="nav-sec" style="margin-top:8px">Trabajo</div>
     <div class="nav-item" onclick="nav('clients')"><i class="ti ti-building"></i>Clientes</div>
     <div class="nav-item" onclick="nav('projects')"><i class="ti ti-folder"></i>Proyectos</div>
+    <div class="nav-item" onclick="nav('templates')"><i class="ti ti-copy"></i>Plantillas</div>
     <div class="nav-sec" style="margin-top:8px">Equipo</div>
     <div class="nav-item" onclick="nav('team')"><i class="ti ti-users"></i>Equipo</div>
     <div class="nav-sec" style="margin-top:8px">Análisis</div>
@@ -1001,9 +1062,13 @@ textarea.finput{resize:vertical;min-height:76px}
     </button>
     <input type="file" id="import-input" accept=".json" style="display:none" onchange="importData(this)">
   </div>
-  <div class="sb-foot">
+  <div class="sb-foot" onclick="openEditMember('mm')" title="Ver y editar mi perfil" style="cursor:pointer;transition:background .15s" onmouseenter="this.style.background='var(--bg3)'" onmouseleave="this.style.background=''">
     <div class="av av-md" style="background:var(--px-light);color:var(--px)" id="admin-av">MM</div>
-    <div><div class="user-name">Manu Moreno</div><div class="user-role">Admin</div></div>
+    <div style="flex:1;min-width:0">
+      <div class="user-name" id="admin-name">Manu Moreno</div>
+      <div class="user-role">Admin</div>
+    </div>
+    <i class="ti ti-settings" style="font-size:14px;color:var(--text3);flex-shrink:0"></i>
   </div>
 </aside>
 
@@ -1152,6 +1217,17 @@ textarea.finput{resize:vertical;min-height:76px}
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- PLANTILLAS -->
+    <div class="page" id="page-templates">
+      <div class="templates-page-header">
+        <div>
+          <div style="font-family:var(--fh);font-size:13px;font-weight:500;color:var(--text3);margin-top:4px">Crea tareas desde una plantilla con un clic. Guarda cualquier tarea como plantilla desde su panel de detalle.</div>
+        </div>
+        <button class="btn btn-primary" onclick="openNewTemplate()"><i class="ti ti-plus"></i>Nueva plantilla</button>
+      </div>
+      <div id="templates-grid" class="templates-grid"></div>
     </div>
 
     <!-- EQUIPO -->
@@ -1339,6 +1415,26 @@ textarea.finput{resize:vertical;min-height:76px}
           </select>
         </div>
 
+        <!-- TIEMPO ESTIMADO vs REAL -->
+        <div class="time-tracking-row" id="time-tracking-row">
+          <div class="time-track-group">
+            <div class="time-track-label">Estimado</div>
+            <div class="time-track-input-wrap">
+              <input type="number" class="time-track-input" id="pd-hours-est" min="0" step="0.5" placeholder="0" onchange="saveTimeTracking()">
+              <span class="time-track-unit">h</span>
+            </div>
+          </div>
+          <div style="font-size:20px;color:var(--border);font-weight:300;padding-top:14px">→</div>
+          <div class="time-track-group">
+            <div class="time-track-label">Real</div>
+            <div class="time-track-input-wrap">
+              <input type="number" class="time-track-input" id="pd-hours-real" min="0" step="0.5" placeholder="0" onchange="saveTimeTracking()">
+              <span class="time-track-unit">h</span>
+            </div>
+          </div>
+          <div id="time-diff-display" style="padding-top:14px"></div>
+        </div>
+
         <!-- SUBTAREAS -->
         <div class="subtasks-section" id="subtasks-section">
           <div class="subtasks-header">
@@ -1428,7 +1524,8 @@ textarea.finput{resize:vertical;min-height:76px}
     </div>
 
     <div class="panel-footer">
-      <button class="btn btn-danger btn-sm" onclick="deleteTask()"><i class="ti ti-trash"></i>Eliminar tarea</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteTask()"><i class="ti ti-trash"></i>Eliminar</button>
+      <button class="save-tpl-btn" onclick="saveAsTemplate()" title="Guardar esta tarea como plantilla reutilizable"><i class="ti ti-copy"></i>Plantilla</button>
       <div style="flex:1"></div>
       <button class="btn btn-ghost" onclick="closePanel()">Cerrar</button>
       <button class="btn btn-primary" onclick="editTask()"><i class="ti ti-edit"></i>Editar</button>
@@ -1457,7 +1554,16 @@ textarea.finput{resize:vertical;min-height:76px}
       <div class="fgroup"><label class="flabel">Estado</label><select class="finput" id="f-status"><option value="todo">Pendiente</option><option value="inprogress">En proceso</option><option value="done">Completada</option></select></div>
       <div class="fgroup"><label class="flabel">Prioridad</label><select class="finput" id="f-priority"><option value="alta">Alta</option><option value="media">Media</option><option value="baja">Baja</option></select></div>
     </div>
-    <div class="fgroup"><label class="flabel">Fecha de entrega</label><input type="date" class="finput" id="f-date"></div>
+    <div class="frow">
+      <div class="fgroup"><label class="flabel">Fecha de entrega</label><input type="date" class="finput" id="f-date"></div>
+      <div class="fgroup">
+        <label class="flabel">Horas estimadas</label>
+        <div style="display:flex;align-items:center;gap:6px">
+          <input type="number" class="finput" id="f-hours-est" placeholder="0" min="0" step="0.5" style="width:90px;text-align:center">
+          <span style="font-family:var(--fb);font-size:12px;color:var(--text3);font-weight:500">horas</span>
+        </div>
+      </div>
+    </div>
     <div class="modal-foot">
       <button class="btn btn-ghost" onclick="closeOv('ov-task')">Cancelar</button>
       <button class="btn btn-primary" onclick="saveTask()"><i class="ti ti-check"></i>Guardar tarea</button>
@@ -1594,6 +1700,49 @@ textarea.finput{resize:vertical;min-height:76px}
   </div>
 </div>
 
+<!-- MODAL: NUEVA/EDITAR PLANTILLA -->
+<div class="overlay" id="ov-template">
+  <div class="modal modal-sm">
+    <div class="modal-head"><div class="modal-title" id="tpl-modal-title">Nueva plantilla</div><button class="modal-close" onclick="closeOv('ov-template')"><i class="ti ti-x"></i></button></div>
+    <div class="fgroup"><label class="flabel">Nombre de la plantilla *</label><input class="finput" id="tpl-name" placeholder="Ej: Informe mensual, Publicaciones semanales..."></div>
+    <div class="fgroup"><label class="flabel">Descripción</label><textarea class="finput" id="tpl-desc" placeholder="¿En qué consiste esta tarea recurrente?"></textarea></div>
+    <div class="frow">
+      <div class="fgroup"><label class="flabel">Prioridad</label><select class="finput" id="tpl-priority"><option value="alta">Alta</option><option value="media">Media</option><option value="baja">Baja</option></select></div>
+      <div class="fgroup"><label class="flabel">Horas estimadas</label><input type="number" class="finput" id="tpl-hours" placeholder="0" min="0" step="0.5"></div>
+    </div>
+    <div class="frow">
+      <div class="fgroup"><label class="flabel">Responsable por defecto</label><select class="finput" id="tpl-member"></select></div>
+      <div class="fgroup"><label class="flabel">Estado inicial</label><select class="finput" id="tpl-status"><option value="todo">Pendiente</option><option value="inprogress">En proceso</option></select></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeOv('ov-template')">Cancelar</button>
+      <button class="btn btn-primary" id="tpl-save-btn" onclick="saveTemplate()"><i class="ti ti-check"></i>Guardar plantilla</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: LANZAR PLANTILLA -->
+<div class="overlay" id="ov-launch-template">
+  <div class="modal modal-sm">
+    <div class="modal-head"><div class="modal-title">Lanzar plantilla</div><button class="modal-close" onclick="closeOv('ov-launch-template')"><i class="ti ti-x"></i></button></div>
+    <div id="launch-tpl-info" style="background:var(--px-light);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:16px;display:flex;align-items:center;gap:10px">
+      <i class="ti ti-copy" style="font-size:20px;color:var(--px)"></i>
+      <div><div id="launch-tpl-name" style="font-family:var(--fh);font-size:14px;font-weight:700;color:var(--text)"></div>
+      <div id="launch-tpl-desc" style="font-family:var(--fb);font-size:12px;color:var(--text3);font-weight:500;margin-top:2px"></div></div>
+    </div>
+    <div class="fgroup"><label class="flabel">Cliente *</label><select class="finput" id="lt-client" onchange="updateLaunchProjectSelect()"></select></div>
+    <div class="fgroup"><label class="flabel">Proyecto</label><select class="finput" id="lt-project"><option value="">Sin proyecto</option></select></div>
+    <div class="frow">
+      <div class="fgroup"><label class="flabel">Asignado a</label><select class="finput" id="lt-member"></select></div>
+      <div class="fgroup"><label class="flabel">Fecha de entrega</label><input type="date" class="finput" id="lt-date"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeOv('ov-launch-template')">Cancelar</button>
+      <button class="btn btn-primary" onclick="launchTemplate()"><i class="ti ti-rocket"></i>Crear tarea</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL: CONFIRMAR ELIMINAR MIEMBRO -->
 <div class="overlay" id="ov-confirm-member">
   <div class="modal modal-sm">
@@ -1628,7 +1777,7 @@ const COLORS=['#e82982','#3b82f6','#10b981','#f59e0b','#8b5cf6','#ec4899','#06b6
 const KEY='pixalia-tm';
 
 let S={
-  tasks:[],clients:[],members:[],projects:[],
+  tasks:[],clients:[],members:[],projects:[],templates:[],
   viewingClientId:null,editingProjectId:null,
   editId:null,viewId:null,deleteId:null,deleteClientId:null,
   dashFilter:null,taskFilter:null,clientFilter:'',memberFilter:'',
@@ -1646,7 +1795,7 @@ function load(){
       if(!raw)continue;
       const d=JSON.parse(raw);
       if(d.tasks&&d.tasks.length>0){
-        S.tasks=d.tasks;S.clients=d.clients||[];S.members=d.members||[];S.projects=d.projects||[];
+        S.tasks=d.tasks;S.clients=d.clients||[];S.members=d.members||[];S.projects=d.projects||[];S.templates=d.templates||[];
         break;
       }
     }catch(e){}
@@ -1663,13 +1812,20 @@ function load(){
     const nextWeek=new Date();nextWeek.setDate(nextWeek.getDate()+6);
     const fmtD=x=>`${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`;
     S.tasks=[
-      {id:'t1',title:'Crear propuesta estratégica Q1',desc:'Elaborar propuesta de estrategia digital para el primer trimestre.',client:'c1',member:'mm',status:'todo',priority:'alta',date:fmtD(threeDaysAgo),comments:[],subtasks:[],activity:[{type:'created',memberId:'mm',ts:Date.now()-3600000*5}]},
-      {id:'t2',title:'Diseñar identidad visual',desc:'Propuesta de identidad visual completa: logo, colores y tipografía.',client:'c2',member:'mm',status:'inprogress',priority:'media',date:fmtD(tomorrow),comments:[{id:'cmt1',memberId:'mm',text:'He empezado con los primeros bocetos. Mañana subo referencias.',ts:Date.now()-3600000*2,edited:false,images:[],links:[],mentions:[]}],subtasks:[],activity:[{type:'created',memberId:'mm',ts:Date.now()-7200000*3}]},
-      {id:'t3',title:'Configurar Google Ads',desc:'Configuración inicial de campañas SEM y primer test A/B.',client:'c1',member:'mm',status:'done',priority:'alta',date:fmtD(nextWeek),comments:[],subtasks:[],activity:[{type:'created',memberId:'mm',ts:Date.now()-86400000}]}
+      {id:'t1',title:'Crear propuesta estratégica Q1',desc:'Elaborar propuesta de estrategia digital para el primer trimestre.',client:'c1',member:'mm',status:'todo',priority:'alta',date:fmtD(threeDaysAgo),project:'',comments:[],subtasks:[],activity:[{type:'created',memberId:'mm',ts:Date.now()-3600000*5}]},
+      {id:'t2',title:'Diseñar identidad visual',desc:'Propuesta de identidad visual completa: logo, colores y tipografía.',client:'c2',member:'mm',status:'inprogress',priority:'media',date:fmtD(tomorrow),project:'',comments:[{id:'cmt1',memberId:'mm',text:'He empezado con los primeros bocetos. Mañana subo referencias.',ts:Date.now()-3600000*2,edited:false,images:[],links:[],mentions:[]}],subtasks:[],activity:[{type:'created',memberId:'mm',ts:Date.now()-7200000*3}]},
+      {id:'t3',title:'Configurar Google Ads',desc:'Configuración inicial de campañas SEM y primer test A/B.',client:'c1',member:'mm',status:'done',priority:'alta',date:fmtD(nextWeek),project:'',comments:[],subtasks:[],activity:[{type:'created',memberId:'mm',ts:Date.now()-86400000}]}
     ];
   }
   // Migrate: add projects array
   if(!S.projects)S.projects=[];
+  // Migrate: add templates array
+  if(!S.templates)S.templates=[];
+  // Migrate tasks: add time tracking fields
+  S.tasks.forEach(t=>{
+    if(t.hoursEst===undefined)t.hoursEst=0;
+    if(t.hoursReal===undefined)t.hoursReal=0;
+  });
   // Migrate members: add phone field
   S.members.forEach(m=>{if(m.phone===undefined)m.phone='';});
   // Migrate clients: add semaphore + notes
@@ -1692,7 +1848,7 @@ function load(){
   persist();
 }
 
-function persist(){try{localStorage.setItem(KEY,JSON.stringify({tasks:S.tasks,clients:S.clients,members:S.members,projects:S.projects}));}catch(e){toast('Almacenamiento lleno','warn');}}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify({tasks:S.tasks,clients:S.clients,members:S.members,projects:S.projects,templates:S.templates}));}catch(e){toast('Almacenamiento lleno','warn');}}
 function now(){return new Date().toISOString().split('T')[0];}
 function ts(){return Date.now();}
 function gm(id){return S.members.find(m=>m.id===id);}
@@ -1722,7 +1878,21 @@ function avHTML(m,size){
 }
 
 /* ── RENDER ALL ── */
+function autoUpdateSemaphores(){
+  // Automatically update semaphores based on overdue/soon tasks
+  // Only auto-upgrades: green→yellow or green/yellow→red. Never auto-downgrades.
+  let changed=false;
+  S.clients.forEach(c=>{
+    const prev=c.semaphore||'green';
+    const auto=clientSemaphoreAuto(c);
+    if(auto==='red'&&prev!=='red'){c.semaphore='red';changed=true;}
+    else if(auto==='yellow'&&prev==='green'){c.semaphore='yellow';changed=true;}
+  });
+  if(changed)persist();
+}
+
 function renderAll(){
+  autoUpdateSemaphores();
   updateStats();renderKanban();renderListRows(getDashTasks(),'list-rows');
   renderWidgetTeam();renderWidgetClients();renderUrgentWidget();
   renderTeamGrid();renderClientsList();
@@ -1738,8 +1908,16 @@ function renderAll(){
 function updateAdminAv(){
   const a=S.members.find(m=>m.isAdmin);if(!a)return;
   const el=document.getElementById('admin-av');
-  if(a.avatar){el.innerHTML=`<img src="${a.avatar}" style="width:34px;height:34px;border-radius:50%;object-fit:cover">`;el.style.background='transparent';}
-  else{el.innerHTML=a.initials||mkInit(a.name);el.style.background='var(--px-light)';el.style.color='var(--px)';}
+  const nameEl=document.getElementById('admin-name');
+  if(nameEl)nameEl.textContent=a.name;
+  if(a.avatar){
+    el.innerHTML=`<img src="${a.avatar}" style="width:34px;height:34px;border-radius:50%;object-fit:cover">`;
+    el.style.background='transparent';
+  } else {
+    el.innerHTML=a.initials||mkInit(a.name);
+    el.style.background='var(--px-light)';
+    el.style.color='var(--px)';
+  }
 }
 
 function updateStats(){
@@ -1811,6 +1989,7 @@ function taskCardHTML(t){
           ${subTotal>0?`<span class="tc-subtasks${subDone===subTotal?' all-done':''}"><i class="ti ti-list-check"></i>${subDone}/${subTotal}</span>`:''}
           ${cmtCount>0?`<span class="tc-comments"><i class="ti ti-message-circle"></i>${cmtCount}</span>`:''}
           <span class="tc-prio"><span class="pdot p-${t.priority}" style="background:${prioColor}"></span>${prioLbl[t.priority]}</span>
+          ${t.hoursEst>0?`<span class="tc-time${t.hoursReal>t.hoursEst?' over':t.hoursReal>0?' under':''}"><i class="ti ti-clock" style="font-size:10px"></i>${t.hoursReal>0?t.hoursReal+'h/'+t.hoursEst+'h':t.hoursEst+'h'}</span>`:''}
         </div>
       </div>
       ${dateHtml?`<div class="tc-foot-row2">${dateHtml}</div>`:''}
@@ -1880,10 +2059,6 @@ function renderWidgetClients(){
     const total=S.tasks.filter(t=>t.client===c.id).length;
     const done=S.tasks.filter(t=>t.client===c.id&&t.status==='done').length;
     const pct=total>0?Math.round((done/total)*100):0;
-    // Auto-upgrade semaphore if tasks are overdue (but only upgrade, never auto-downgrade)
-    const autoSem=clientSemaphoreAuto(c);
-    if(autoSem==='red'&&(c.semaphore||'green')!=='red'){c.semaphore='red';}
-    else if(autoSem==='yellow'&&(c.semaphore||'green')==='green'){c.semaphore='yellow';}
     const sem=c.semaphore||'green';
     return `<div class="mini-client">
       <div class="mc-top">
@@ -1997,8 +2172,8 @@ function syncSelects(){
     else if(isReassign){el.innerHTML=S.members.filter(m=>m.id!==S.deleteId).map(m=>`<option value="${m.id}">${m.name}</option>`).join('');}
     if(v)el.value=v;
   });
-  // Update project select based on current client
-  updateProjectSelect();
+  // Note: project select is updated explicitly via updateProjectSelect()
+  // when client changes — do NOT call here as it would reset project value
 }
 
 /* ── NAVIGATION ── */
@@ -2007,11 +2182,12 @@ function nav(page){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('page-'+page).classList.add('active');
   document.querySelectorAll('.nav-item').forEach(n=>{if((n.getAttribute('onclick')||'').includes("'"+page+"'"))n.classList.add('active');});
-  const titles={dashboard:'Dashboard',tasks:'Todas las tareas',clients:'Clientes',projects:'Proyectos',calendar:'Calendario',reports:'Informes',team:'Equipo','client-detail':'Cliente'};
-  const subs={dashboard:'Resumen del estado actual de Pixalia Studio',tasks:'Gestiona y filtra todas las tareas',clients:'Gestiona los clientes de la agencia',projects:'Todos los proyectos activos de la agencia',calendar:'Vista de tareas por fecha',reports:'Genera y descarga informes por cliente y período',team:'Gestiona el equipo de Pixalia Studio','client-detail':'Proyectos y tareas del cliente'};
+  const titles={dashboard:'Dashboard',tasks:'Todas las tareas',clients:'Clientes',projects:'Proyectos',templates:'Plantillas',calendar:'Calendario',reports:'Informes',team:'Equipo','client-detail':'Cliente'};
+  const subs={dashboard:'Resumen del estado actual de Pixalia Studio',tasks:'Gestiona y filtra todas las tareas',clients:'Gestiona los clientes de la agencia',projects:'Todos los proyectos activos de la agencia',templates:'Tareas recurrentes listas para lanzar',calendar:'Vista de tareas por fecha',reports:'Genera y descarga informes por cliente y período',team:'Gestiona el equipo de Pixalia Studio','client-detail':'Proyectos y tareas del cliente'};
   document.getElementById('topbar-title').textContent=titles[page];
   document.getElementById('topbar-sub').textContent=subs[page];
   if(page==='tasks')renderTasksPage();
+  if(page==='templates')renderTemplatesPage();
   if(page==='team')renderTeamGrid();
   if(page==='clients')renderClientsList();
   if(page==='projects')renderProjectsGlobal();
@@ -2124,6 +2300,7 @@ function renderPanelDetail(t){
   else if(dst==='soon'){dateEl.innerHTML=`<span class="date-soon">⏰ ${fmtDate(t.date)}</span>`;}
   else{dateEl.textContent=fmtDate(t.date);}
   document.getElementById('pd-status-sel').value=t.status;
+  renderPanelTimeTracking(t);
 }
 
 function renderComments(t){
@@ -2317,7 +2494,11 @@ function openNewTask(){
   document.getElementById('f-status').value='todo';
   document.getElementById('f-priority').value='alta';
   document.getElementById('f-date').value='';
-  syncSelects();openOv('ov-task');
+  syncSelects();
+  updateProjectSelect(); // populate based on selected client
+  const projSel=document.getElementById('f-project');
+  if(projSel)projSel.value=''; // reset to "Sin proyecto"
+  openOv('ov-task');
 }
 
 function saveTask(){
@@ -2336,12 +2517,13 @@ function saveTask(){
     t.status=document.getElementById('f-status').value;
     t.priority=document.getElementById('f-priority').value;
     t.date=document.getElementById('f-date').value;
+    t.hoursEst=parseFloat(document.getElementById('f-hours-est')?.value)||0;
     t.activity.push({type:'edited',memberId:admin.id,ts:ts()});
     toast('Tarea actualizada');
     persist();closeOv('ov-task');renderAll();
     openPanel(S.editId);
   } else {
-    const t={id:'t'+Date.now(),title,desc:document.getElementById('f-desc').value.trim(),client,member,project:document.getElementById('f-project')?.value||'',status:document.getElementById('f-status').value,priority:document.getElementById('f-priority').value,date:document.getElementById('f-date').value,comments:[],subtasks:[],activity:[{type:'created',memberId:admin.id,ts:ts()}]};
+    const t={id:'t'+Date.now(),title,desc:document.getElementById('f-desc').value.trim(),client,member,project:document.getElementById('f-project')?.value||'',status:document.getElementById('f-status').value,priority:document.getElementById('f-priority').value,date:document.getElementById('f-date').value,hoursEst:parseFloat(document.getElementById('f-hours-est')?.value)||0,hoursReal:0,comments:[],subtasks:[],activity:[{type:'created',memberId:admin.id,ts:ts()}]};
     S.tasks.push(t);
     toast('Tarea creada');persist();closeOv('ov-task');renderAll();
   }
@@ -2356,12 +2538,16 @@ function editTask(){
   syncSelects();
   setTimeout(()=>{
     document.getElementById('f-client').value=t.client;
-    updateProjectSelect();
-    setTimeout(()=>{if(document.getElementById('f-project'))document.getElementById('f-project').value=t.project||'';},50);
+    updateProjectSelect(); // populate projects for this client
+    setTimeout(()=>{
+      const projSel=document.getElementById('f-project');
+      if(projSel)projSel.value=t.project||'';
+    },80);
     document.getElementById('f-member').value=t.member;
     document.getElementById('f-status').value=t.status;
     document.getElementById('f-priority').value=t.priority;
     document.getElementById('f-date').value=t.date||'';
+    const hEstEl=document.getElementById('f-hours-est');if(hEstEl)hEstEl.value=t.hoursEst||'';
     openOv('ov-task');
   },100);
 }
@@ -3498,18 +3684,31 @@ function projectCardHTML(p){
         let dateStyle='';
         if(dst==='overdue'){dateStyle='color:#dc2626;font-weight:700';}
         else if(dst==='soon'){dateStyle='color:#b45309;font-weight:700';}
+        const smChip={
+          todo:`<span style="font-family:var(--fh);font-size:9.5px;font-weight:700;background:var(--todo-bg);color:#92400e;padding:1px 6px;border-radius:8px">Pendiente</span>`,
+          inprogress:`<span style="font-family:var(--fh);font-size:9.5px;font-weight:700;background:var(--inprogress-bg);color:#1e40af;padding:1px 6px;border-radius:8px">En proceso</span>`,
+          done:`<span style="font-family:var(--fh);font-size:9.5px;font-weight:700;background:var(--done-bg);color:#064e3b;padding:1px 6px;border-radius:8px">Completada</span>`
+        }[t.status]||'';
         return `<div class="project-task-row" onclick="openPanel('${t.id}')">
           <span class="sdot" style="${sdot}"></span>
           <span class="project-task-title">${t.title}</span>
+          ${smChip}
           ${mb?`<span class="project-task-assignee">${avHTML(mb,'xs')}</span>`:''}
           ${t.date?`<span class="project-task-date" style="${dateStyle}">${dateTxt}</span>`:''}
+          <div class="project-task-actions" onclick="event.stopPropagation()">
+            <button class="pt-action-btn" onclick="openPanelAndEdit('${t.id}')" title="Editar tarea"><i class="ti ti-pencil"></i></button>
+            <button class="pt-action-btn" onclick="quickStatusFromProject('${t.id}','${p.id}')" title="Cambiar estado"><i class="ti ti-arrows-exchange"></i></button>
+            <button class="pt-action-btn del" onclick="deleteTaskFromProject('${t.id}','${p.id}')" title="Eliminar tarea"><i class="ti ti-trash"></i></button>
+          </div>
         </div>`;
       }).join(''):`<div class="empty-state" style="padding:16px"><i class="ti ti-circle-dashed"></i><p>Sin tareas en este proyecto</p></div>`}
       ${tasks.length>8?`<div style="font-family:var(--fb);font-size:11px;color:var(--text3);padding:6px 0;text-align:center">+${tasks.length-8} tareas más</div>`:''}
     </div>
     <div class="project-actions">
       <button class="btn btn-ghost btn-sm" onclick="openNewTaskForProject('${p.id}')"><i class="ti ti-plus"></i>Nueva tarea</button>
-      <button class="btn btn-ghost btn-sm" onclick="editProject('${p.id}')"><i class="ti ti-pencil"></i>Editar</button>
+      <button class="btn btn-ghost btn-sm" onclick="editProject('${p.id}')"><i class="ti ti-pencil"></i>Editar proyecto</button>
+      <div style="flex:1"></div>
+      <span style="font-family:var(--fb);font-size:10.5px;color:var(--text3);font-weight:500;font-style:italic">Pasa el cursor sobre una tarea para editarla</span>
       <button class="btn btn-danger btn-sm" onclick="confirmDeleteProject('${p.id}')"><i class="ti ti-trash"></i></button>
     </div>
   </div>`;
@@ -3597,11 +3796,19 @@ Las tareas no se eliminarán, solo perderán su asignación al proyecto.`))retur
 function openNewTaskForProject(pid){
   const p=gp(pid);if(!p)return;
   openNewTask();
+  // Chain: set client → update project list → select project
   setTimeout(()=>{
-    document.getElementById('f-client').value=p.client;
+    const clientSel=document.getElementById('f-client');
+    if(clientSel){clientSel.value=p.client;}
     updateProjectSelect();
-    setTimeout(()=>{document.getElementById('f-project').value=pid;},50);
-  },100);
+    setTimeout(()=>{
+      const projSel=document.getElementById('f-project');
+      if(projSel){projSel.value=pid;}
+      // Focus title
+      const title=document.getElementById('f-title');
+      if(title)title.focus();
+    },80);
+  },150);
 }
 
 /* ── Project color swatches ── */
@@ -4356,6 +4563,61 @@ function buildReportHTML(){
 
 .member-modal-divider{height:1px;background:var(--border2);margin:16px 0}
 
+
+/* Project task row — quick actions on hover */
+.project-task-row{position:relative}
+
+
+
+/* ══ TIEMPO ESTIMADO VS REAL ══ */
+.time-tracking-row{display:flex;align-items:center;gap:10px;padding:14px 0;border-top:1px solid var(--border2)}
+.time-track-group{flex:1;display:flex;flex-direction:column;gap:5px}
+.time-track-label{font-family:var(--fh);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3)}
+.time-track-input-wrap{display:flex;align-items:center;gap:6px}
+.time-track-input{width:80px;padding:7px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:var(--fh);font-size:14px;font-weight:700;color:var(--text);text-align:center;outline:none;transition:border-color .15s}
+.time-track-input:focus{border-color:var(--px)}
+.time-track-unit{font-family:var(--fb);font-size:12px;color:var(--text3);font-weight:500}
+.time-diff{font-family:var(--fh);font-size:11px;font-weight:700;padding:3px 9px;border-radius:10px}
+.time-diff.over{background:#fee2e2;color:#dc2626}
+.time-diff.under{background:#ecfdf5;color:#065f46}
+.time-diff.exact{background:#eff6ff;color:#1e40af}
+.time-progress{height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;margin-top:4px}
+.time-progress-fill{height:100%;border-radius:3px;transition:width .4s ease}
+
+/* Time on task card */
+.tc-time{display:flex;align-items:center;gap:3px;font-family:var(--fh);font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;background:var(--bg3);color:var(--text3)}
+.tc-time.over{background:#fee2e2;color:#dc2626}
+.tc-time.under{background:#ecfdf5;color:#065f46}
+
+/* Time summary in detail grid */
+.time-summary-box{background:var(--bg3);border-radius:var(--radius-sm);padding:10px 14px;display:flex;align-items:center;gap:16px;margin-top:6px}
+.tsb-item{text-align:center}
+.tsb-val{font-family:var(--fh);font-size:16px;font-weight:800;color:var(--text)}
+.tsb-lbl{font-family:var(--fb);font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+
+/* ══ PLANTILLAS ══ */
+.templates-page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.templates-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.template-card{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);padding:18px;transition:box-shadow .15s;display:flex;flex-direction:column;gap:12px}
+.template-card:hover{box-shadow:var(--shadow)}
+.tpl-header{display:flex;align-items:flex-start;gap:10px}
+.tpl-icon{width:36px;height:36px;border-radius:var(--radius-sm);background:var(--px-light);color:var(--px);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.tpl-info{flex:1;min-width:0}
+.tpl-name{font-family:var(--fh);font-size:14px;font-weight:700;color:var(--text)}
+.tpl-desc{font-family:var(--fb);font-size:12px;color:var(--text3);font-weight:500;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tpl-meta{display:flex;gap:6px;flex-wrap:wrap}
+.tpl-actions{display:flex;gap:6px;padding-top:10px;border-top:1px solid var(--border2)}
+
+/* Save as template button in task panel */
+.save-tpl-btn{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:var(--radius-sm);background:transparent;border:1px solid var(--border);font-family:var(--fh);font-size:11px;font-weight:700;color:var(--text3);cursor:pointer;transition:all .15s}
+.save-tpl-btn:hover{background:var(--px-light);color:var(--px);border-color:var(--px)}
+
+/* Template empty state */
+.tpl-empty{text-align:center;padding:60px 20px;color:var(--text3)}
+.tpl-empty .ti{font-size:44px;display:block;margin-bottom:12px;color:var(--border)}
+.tpl-empty-title{font-family:var(--fh);font-size:15px;font-weight:700;color:var(--text2);margin-bottom:6px}
+.tpl-empty-sub{font-family:var(--fb);font-size:13px;font-weight:500;line-height:1.5}
+
 </style>
 </head>
 <body>
@@ -4434,6 +4696,265 @@ function printReport(){
   w.document.write(reportHTML);
   w.document.close();
   w.onload=()=>{w.focus();w.print();}
+}
+
+
+/* ── Project task quick actions ── */
+function openPanelAndEdit(taskId){
+  openPanel(taskId);
+  // Switch to detail tab and trigger edit after panel opens
+  setTimeout(()=>editTask(),200);
+}
+
+function quickStatusFromProject(taskId,projectId){
+  const t=gt(taskId);if(!t)return;
+  const statusCycle={todo:'inprogress',inprogress:'done',done:'todo'};
+  const prev=t.status;
+  t.status=statusCycle[prev];
+  const admin=S.members.find(m=>m.isAdmin)||S.members[0];
+  t.activity.push({type:'status',memberId:admin.id,from:prev,to:t.status,ts:ts()});
+  persist();renderAll();
+  // Re-expand the project card
+  setTimeout(()=>{
+    const card=document.getElementById('proj-'+projectId);
+    if(card&&!card.classList.contains('expanded'))card.classList.add('expanded');
+  },50);
+  const labels={todo:'Pendiente',inprogress:'En proceso',done:'Completada'};
+  toast(`Estado → ${labels[t.status]}`);
+}
+
+function deleteTaskFromProject(taskId,projectId){
+  const t=gt(taskId);if(!t)return;
+  if(!confirm(`¿Eliminar "${t.title}"?`))return;
+  S.tasks=S.tasks.filter(x=>x.id!==taskId);
+  persist();renderAll();
+  setTimeout(()=>{
+    const card=document.getElementById('proj-'+projectId);
+    if(card&&!card.classList.contains('expanded'))card.classList.add('expanded');
+  },50);
+  toast('Tarea eliminada');
+}
+
+
+/* ═══ TIEMPO ESTIMADO VS REAL ═══ */
+
+function renderPanelTimeTracking(t){
+  const estEl=document.getElementById('pd-hours-est');
+  const realEl=document.getElementById('pd-hours-real');
+  const diffEl=document.getElementById('time-diff-display');
+  if(!estEl||!realEl)return;
+
+  estEl.value=t.hoursEst||'';
+  realEl.value=t.hoursReal||'';
+
+  updateTimeDiff(t.hoursEst||0,t.hoursReal||0,diffEl);
+}
+
+function updateTimeDiff(est,real,el){
+  if(!el)return;
+  if(!est&&!real){el.innerHTML='';return;}
+  if(est&&!real){
+    el.innerHTML=`<span class="time-diff exact">${est}h estimadas</span>`;return;
+  }
+  if(!est&&real){
+    el.innerHTML=`<span class="time-diff exact">${real}h registradas</span>`;return;
+  }
+  const diff=real-est;
+  const pct=Math.round((real/est)*100);
+  if(diff>0){
+    el.innerHTML=`<span class="time-diff over">+${diff.toFixed(1)}h (${pct}%)</span>`;
+  } else if(diff<0){
+    el.innerHTML=`<span class="time-diff under">${diff.toFixed(1)}h (${pct}%)</span>`;
+  } else {
+    el.innerHTML=`<span class="time-diff exact">En tiempo ✓</span>`;
+  }
+}
+
+function saveTimeTracking(){
+  const t=gt(S.viewId);if(!t)return;
+  const estEl=document.getElementById('pd-hours-est');
+  const realEl=document.getElementById('pd-hours-real');
+  t.hoursEst=parseFloat(estEl?.value)||0;
+  t.hoursReal=parseFloat(realEl?.value)||0;
+  const diffEl=document.getElementById('time-diff-display');
+  updateTimeDiff(t.hoursEst,t.hoursReal,diffEl);
+  persist();
+  renderAll(); // refresh cards
+}
+
+/* ═══ PLANTILLAS ═══ */
+
+function renderTemplatesPage(){
+  const el=document.getElementById('templates-grid');if(!el)return;
+  const ts=document.getElementById('tpl-member');
+  if(ts){ts.innerHTML=S.members.map(m=>`<option value="${m.id}">${m.name}</option>`).join('');}
+
+  if(!S.templates.length){
+    el.innerHTML=`<div class="tpl-empty" style="grid-column:1/-1">
+      <i class="ti ti-copy"></i>
+      <div class="tpl-empty-title">Sin plantillas aún</div>
+      <div class="tpl-empty-sub">
+        Crea una nueva plantilla manualmente<br>o guarda cualquier tarea existente como plantilla<br>desde el botón <strong>Plantilla</strong> en su panel de detalle.
+      </div>
+    </div>`;
+    return;
+  }
+
+  el.innerHTML=S.templates.map(tpl=>{
+    const mb=gm(tpl.memberId);
+    const prioColors={alta:'#ef4444',media:'#f59e0b',baja:'#10b981'};
+    const prioLabel={alta:'Alta',media:'Media',baja:'Baja'};
+    const usedCount=tpl.usedCount||0;
+    return `<div class="template-card">
+      <div class="tpl-header">
+        <div class="tpl-icon"><i class="ti ti-copy"></i></div>
+        <div class="tpl-info">
+          <div class="tpl-name">${tpl.name}</div>
+          ${tpl.desc?`<div class="tpl-desc">${tpl.desc}</div>`:''}
+        </div>
+      </div>
+      <div class="tpl-meta">
+        <span class="tag" style="background:${prioColors[tpl.priority]}22;color:${prioColors[tpl.priority]}"><span class="pdot p-${tpl.priority}" style="background:${prioColors[tpl.priority]}"></span>${prioLabel[tpl.priority]}</span>
+        ${tpl.hoursEst?`<span class="tc-time"><i class="ti ti-clock" style="font-size:11px"></i>${tpl.hoursEst}h est.</span>`:''}
+        ${mb?`<span style="display:flex;align-items:center;gap:4px;font-family:var(--fb);font-size:11px;color:var(--text3);font-weight:500">${avHTML(mb,'xs')}${mb.name.split(' ')[0]}</span>`:''}
+        ${usedCount>0?`<span class="tag tag-px" style="font-size:10px">Usada ${usedCount}x</span>`:''}
+      </div>
+      <div class="tpl-actions">
+        <button class="btn btn-primary btn-sm" style="flex:1;justify-content:center" onclick="openLaunchTemplate('${tpl.id}')"><i class="ti ti-rocket"></i>Lanzar tarea</button>
+        <button class="btn btn-ghost btn-sm" onclick="openEditTemplate('${tpl.id}')"><i class="ti ti-pencil"></i></button>
+        <button class="btn btn-danger btn-sm" onclick="deleteTemplate('${tpl.id}')"><i class="ti ti-trash"></i></button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openNewTemplate(){
+  S.editingTemplateId=null;
+  document.getElementById('tpl-modal-title').textContent='Nueva plantilla';
+  document.getElementById('tpl-save-btn').textContent='Guardar plantilla';
+  document.getElementById('tpl-name').value='';
+  document.getElementById('tpl-desc').value='';
+  document.getElementById('tpl-priority').value='media';
+  document.getElementById('tpl-hours').value='';
+  document.getElementById('tpl-status').value='todo';
+  const ms=document.getElementById('tpl-member');
+  if(ms)ms.innerHTML=S.members.map(m=>`<option value="${m.id}">${m.name}</option>`).join('');
+  openOv('ov-template');
+}
+
+function openEditTemplate(id){
+  const tpl=S.templates.find(t=>t.id===id);if(!tpl)return;
+  S.editingTemplateId=id;
+  document.getElementById('tpl-modal-title').textContent='Editar plantilla';
+  document.getElementById('tpl-save-btn').textContent='Guardar cambios';
+  document.getElementById('tpl-name').value=tpl.name;
+  document.getElementById('tpl-desc').value=tpl.desc||'';
+  document.getElementById('tpl-priority').value=tpl.priority||'media';
+  document.getElementById('tpl-hours').value=tpl.hoursEst||'';
+  document.getElementById('tpl-status').value=tpl.status||'todo';
+  const ms=document.getElementById('tpl-member');
+  if(ms){ms.innerHTML=S.members.map(m=>`<option value="${m.id}">${m.name}</option>`).join('');ms.value=tpl.memberId||'';}
+  openOv('ov-template');
+}
+
+function saveTemplate(){
+  const name=document.getElementById('tpl-name').value.trim();
+  if(!name){toast('El nombre es obligatorio','warn');return;}
+  const tpl={
+    name,
+    desc:document.getElementById('tpl-desc').value.trim(),
+    priority:document.getElementById('tpl-priority').value,
+    hoursEst:parseFloat(document.getElementById('tpl-hours').value)||0,
+    status:document.getElementById('tpl-status').value,
+    memberId:document.getElementById('tpl-member').value
+  };
+  if(S.editingTemplateId){
+    const idx=S.templates.findIndex(t=>t.id===S.editingTemplateId);
+    if(idx>=0)S.templates[idx]={...S.templates[idx],...tpl};
+    toast('Plantilla actualizada');
+  } else {
+    S.templates.push({id:'tpl'+Date.now(),...tpl,usedCount:0,createdAt:ts()});
+    toast('Plantilla guardada');
+  }
+  persist();closeOv('ov-template');
+  if(document.getElementById('page-templates').classList.contains('active'))renderTemplatesPage();
+}
+
+function saveAsTemplate(){
+  const t=gt(S.viewId);if(!t)return;
+  S.editingTemplateId=null;
+  document.getElementById('tpl-modal-title').textContent='Guardar como plantilla';
+  document.getElementById('tpl-save-btn').textContent='Guardar plantilla';
+  document.getElementById('tpl-name').value=t.title;
+  document.getElementById('tpl-desc').value=t.desc||'';
+  document.getElementById('tpl-priority').value=t.priority||'media';
+  document.getElementById('tpl-hours').value=t.hoursEst||'';
+  document.getElementById('tpl-status').value='todo'; // always start fresh
+  const ms=document.getElementById('tpl-member');
+  if(ms){ms.innerHTML=S.members.map(m=>`<option value="${m.id}">${m.name}</option>`).join('');ms.value=t.member||'';}
+  openOv('ov-template');
+  toast('Configurando plantilla desde esta tarea');
+}
+
+function deleteTemplate(id){
+  if(!confirm('¿Eliminar esta plantilla?'))return;
+  S.templates=S.templates.filter(t=>t.id!==id);
+  persist();renderTemplatesPage();toast('Plantilla eliminada');
+}
+
+function openLaunchTemplate(id){
+  const tpl=S.templates.find(t=>t.id===id);if(!tpl)return;
+  S.launchingTemplateId=id;
+  document.getElementById('launch-tpl-name').textContent=tpl.name;
+  document.getElementById('launch-tpl-desc').textContent=tpl.desc||'';
+  // Populate selects
+  const cs=document.getElementById('lt-client');
+  const ms=document.getElementById('lt-member');
+  if(cs)cs.innerHTML=S.clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  if(ms){ms.innerHTML=S.members.map(m=>`<option value="${m.id}">${m.name}</option>`).join('');ms.value=tpl.memberId||'';}
+  updateLaunchProjectSelect();
+  // Default date: today
+  document.getElementById('lt-date').value=now();
+  openOv('ov-launch-template');
+}
+
+function updateLaunchProjectSelect(){
+  const clientId=document.getElementById('lt-client')?.value;
+  const sel=document.getElementById('lt-project');
+  if(!sel)return;
+  const projs=S.projects.filter(p=>p.client===clientId);
+  sel.innerHTML='<option value="">Sin proyecto</option>'+projs.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+}
+
+function launchTemplate(){
+  const tpl=S.templates.find(t=>t.id===S.launchingTemplateId);if(!tpl)return;
+  const client=document.getElementById('lt-client')?.value;
+  const member=document.getElementById('lt-member')?.value;
+  if(!client){toast('Selecciona un cliente','warn');return;}
+  if(!member){toast('Selecciona un responsable','warn');return;}
+  const admin=S.members.find(m=>m.isAdmin)||S.members[0];
+  const newTask={
+    id:'t'+Date.now(),
+    title:tpl.name,
+    desc:tpl.desc||'',
+    client,member,
+    project:document.getElementById('lt-project')?.value||'',
+    status:tpl.status||'todo',
+    priority:tpl.priority||'media',
+    date:document.getElementById('lt-date')?.value||'',
+    hoursEst:tpl.hoursEst||0,
+    hoursReal:0,
+    comments:[],subtasks:[],
+    activity:[{type:'created',memberId:admin.id,ts:ts(),fromTemplate:tpl.name}]
+  };
+  S.tasks.push(newTask);
+  // Increment usage counter
+  const tplIdx=S.templates.findIndex(t=>t.id===S.launchingTemplateId);
+  if(tplIdx>=0)S.templates[tplIdx].usedCount=(S.templates[tplIdx].usedCount||0)+1;
+  persist();closeOv('ov-launch-template');renderAll();
+  toast(`Tarea creada desde plantilla "${tpl.name}"`);
+  // Open the new task panel
+  setTimeout(()=>openPanel(newTask.id),300);
 }
 
 load();renderAll();
