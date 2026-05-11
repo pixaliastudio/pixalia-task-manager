@@ -777,6 +777,74 @@ textarea.finput{resize:vertical;min-height:76px}
 .cal-legend-item{display:flex;align-items:center;gap:5px;font-family:var(--fb);font-size:11px;color:var(--text2);font-weight:500}
 .cal-legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 
+
+/* ══ SEMÁFORO DE CLIENTE ══ */
+.client-semaphore{width:12px;height:12px;border-radius:50%;flex-shrink:0;cursor:pointer;position:relative;transition:transform .15s;box-shadow:0 0 0 2px rgba(255,255,255,.9)}
+.client-semaphore:hover{transform:scale(1.2)}
+.sem-green{background:#10b981}
+.sem-yellow{background:#f59e0b}
+.sem-red{background:#ef4444;animation:sem-pulse 2s infinite}
+@keyframes sem-pulse{0%,100%{box-shadow:0 0 0 2px rgba(255,255,255,.9)}50%{box-shadow:0 0 0 2px rgba(239,68,68,.4),0 0 0 4px rgba(239,68,68,.15)}}
+
+.sem-picker{display:flex;gap:6px;align-items:center;padding:6px 8px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-sm);box-shadow:var(--shadow);position:absolute;top:calc(100% + 6px);left:50%;transform:translateX(-50%);z-index:300;white-space:nowrap}
+.sem-option{width:18px;height:18px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .15s}
+.sem-option:hover{transform:scale(1.2)}
+.sem-option.active{border-color:var(--text)}
+.sem-label{font-family:var(--fh);font-size:10px;font-weight:700;color:var(--text3);padding:0 4px}
+
+/* Semaphore in dashboard widget */
+.mini-client-sem{display:flex;align-items:center;gap:4px}
+
+/* Semaphore summary in dashboard */
+.sem-summary{display:flex;gap:10px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border2)}
+.sem-sum-item{display:flex;align-items:center;gap:5px;font-family:var(--fb);font-size:11.5px;font-weight:600;cursor:pointer;padding:4px 8px;border-radius:var(--radius-sm);transition:background .15s}
+.sem-sum-item:hover{background:var(--bg3)}
+.sem-sum-count{font-family:var(--fh);font-size:13px;font-weight:800}
+
+/* ══ NOTAS PRIVADAS ══ */
+.notes-wrap{display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start}
+.notes-left{display:flex;flex-direction:column;gap:0}
+.notes-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;color:var(--text3);background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);margin-bottom:16px}
+.notes-empty .ti{font-size:40px;margin-bottom:12px;color:var(--border)}
+.notes-empty-title{font-family:var(--fh);font-size:14px;font-weight:700;color:var(--text2);margin-bottom:6px}
+.notes-empty-sub{font-family:var(--fb);font-size:12.5px;font-weight:500;text-align:center;line-height:1.5}
+
+.notes-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.note-item{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:14px 16px;position:relative;border-left:3px solid var(--px);transition:box-shadow .15s}
+.note-item:hover{box-shadow:var(--shadow)}
+.note-item:hover .note-actions{opacity:1}
+.note-text{font-family:var(--fb);font-size:13px;color:var(--text);font-weight:500;line-height:1.6;white-space:pre-wrap;word-break:break-word}
+.note-text.editing{display:none}
+.note-edit-area{display:none;width:100%;font-family:var(--fb);font-size:13px;font-weight:500;color:var(--text);border:1px solid var(--px);border-radius:var(--radius-sm);padding:8px 10px;outline:none;resize:vertical;min-height:70px;background:var(--bg2)}
+.note-edit-area.visible{display:block}
+.note-meta{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+.note-author{display:flex;align-items:center;gap:5px;font-family:var(--fb);font-size:11px;color:var(--text3);font-weight:500}
+.note-date{font-family:var(--fb);font-size:11px;color:var(--text3);font-weight:500}
+.note-actions{display:flex;gap:4px;margin-left:auto;opacity:0;transition:opacity .15s}
+.note-action-btn{background:none;border:none;cursor:pointer;font-family:var(--fh);font-size:11px;font-weight:700;color:var(--text3);padding:3px 7px;border-radius:5px;transition:all .15s;display:flex;align-items:center;gap:3px}
+.note-action-btn:hover{background:var(--bg3);color:var(--px)}
+.note-action-btn.del:hover{background:#fee2e2;color:#dc2626}
+.note-edit-actions{display:none;gap:6px;margin-top:8px}
+.note-edit-actions.visible{display:flex}
+
+/* Composer panel (right column) */
+.notes-composer-panel{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);padding:18px;position:sticky;top:80px}
+.notes-composer-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border2)}
+.notes-composer-title{font-family:var(--fh);font-size:13px;font-weight:700;color:var(--text)}
+.notes-composer-header .ti{font-size:15px;color:var(--px)}
+.note-composer-input{width:100%;font-family:var(--fb);font-size:13px;font-weight:500;color:var(--text);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;outline:none;resize:none;min-height:120px;transition:border-color .15s;background:var(--bg2);line-height:1.55}
+.note-composer-input:focus{border-color:var(--px)}
+.note-composer-input::placeholder{color:var(--text3)}
+.notes-composer-footer{margin-top:10px;display:flex;flex-direction:column;gap:6px}
+.notes-tip{font-family:var(--fb);font-size:11px;color:var(--text3);font-weight:500;display:flex;align-items:center;gap:5px}
+.notes-tip .ti{font-size:13px;color:var(--px)}
+
+/* Note indicator on client card */
+.cc-notes-badge{display:inline-flex;align-items:center;gap:3px;font-family:var(--fh);font-size:10px;font-weight:700;color:var(--text3);background:var(--bg3);padding:2px 7px;border-radius:10px}
+.cc-notes-badge .ti{font-size:11px}
+
+@media(max-width:900px){.notes-wrap{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
