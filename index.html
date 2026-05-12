@@ -2213,6 +2213,19 @@ textarea.finput{resize:vertical;min-height:76px}
       </div>
     </div>
 
+    <!-- Configuración de integraciones — solo admin -->
+    <div id="fm-integrations-section" style="display:none">
+      <div class="member-modal-divider"></div>
+      <div class="fgroup">
+        <label class="flabel" style="display:flex;align-items:center;gap:6px">
+          <i class="ti ti-brand-slack" style="color:#e82982;font-size:14px"></i>
+          Slack Webhook — Mejoras
+        </label>
+        <input class="finput" id="fm-slack-webhook" type="text" placeholder="https://hooks.slack.com/services/...">
+        <div style="font-family:var(--fb);font-size:11px;color:var(--text3);margin-top:4px">URL del webhook de Slack para recibir las propuestas de mejora del equipo. Solo visible para el administrador.</div>
+      </div>
+    </div>
+
     <div class="modal-foot">
       <button class="btn btn-ghost" onclick="closeOv('ov-member')">Cancelar</button>
       <button class="btn btn-primary" id="member-save-btn" onclick="saveMember()">
@@ -3286,6 +3299,14 @@ function openEditMember(id){
     if(m.avatar){p.innerHTML=`<img src="${m.avatar}" style="width:72px;height:72px;border-radius:50%;object-fit:cover">`;p.style.background='transparent';}
     else{p.innerHTML='<i class="ti ti-user"></i>';p.style.background='#e8e8e8';p.style.color='#999';}
   }
+  // Mostrar campo webhook solo si es el admin editando su propio perfil
+  const intSection=document.getElementById('fm-integrations-section');
+  const webhookEl=document.getElementById('fm-slack-webhook');
+  if(intSection&&webhookEl){
+    const isAdminSelf=m.isAdmin&&id===S.currentUserId;
+    intSection.style.display=isAdminSelf?'':'none';
+    if(isAdminSelf)webhookEl.value=localStorage.getItem('px-slack-webhook')||'';
+  }
   selectMemberRole(m.isAdmin?'admin':'user');
   document.getElementById('member-modal-title').textContent='Editar miembro';
   document.getElementById('member-save-btn').innerHTML='<i class="ti ti-check"></i>Guardar cambios';
@@ -3332,6 +3353,12 @@ function saveMember(){
     if(S.pendingAvatarData)m.avatar=S.pendingAvatarData;
     m.isAdmin=isAdmin||m.isAdmin;
     if(password.length>=4)m.password=password; // only update if something entered
+    // Guardar webhook si es admin editando su propio perfil
+    if(m.isAdmin&&S.editingMemberId===S.currentUserId){
+      const wh=(document.getElementById('fm-slack-webhook')?.value||'').trim();
+      if(wh)localStorage.setItem('px-slack-webhook',wh);
+      else localStorage.removeItem('px-slack-webhook');
+    }
     persist();closeOv('ov-member');renderAll();toast('Miembro actualizado');
   } else {
     if(!password||password.length<4){toast('La contraseña debe tener al menos 4 caracteres','warn');return;}
@@ -6659,7 +6686,7 @@ function toggleWlSection(secId,toggleEl){
 // ═══════════════════════════════════════════════
 
 // CONFIG — Reemplaza con tu Webhook real de Slack
-const SLACK_WEBHOOK_URL = 'https://hooks.slack.com/services/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';
+const SLACK_WEBHOOK_URL = localStorage.getItem('px-slack-webhook') || '';
 const EMAIL_DESTINO = 'info@pixaliastudio.com';
 
 let imprTipoSelected = 'Nueva funcionalidad';
